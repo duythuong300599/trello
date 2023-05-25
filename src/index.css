@@ -1,0 +1,13 @@
+:root {
+}
+body {
+	margin: 0;
+}
+
+.d-flex {
+	display: flex;
+}
+
+.align-center {
+	align-items: center;
+}

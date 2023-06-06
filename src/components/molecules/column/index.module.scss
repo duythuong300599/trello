@@ -1,0 +1,41 @@
+.colWrapper {
+	background-color: #f1f2f4;
+	border-radius: 12px;
+	overflow: hidden;
+	padding: 8px;
+	width: 260px;
+
+	.colHeader {
+		padding: 4px 6px;
+		font-size: 14px;
+		font-weight: 500;
+		color: #172b4d;
+	}
+
+	.colBody {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		.card {
+			margin: 4px 0;
+		}
+	}
+
+	.colFooter {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		border-radius: 8px;
+		color: #44546f;
+		padding: 4px 8px 4px 6px;
+		margin-top: 4px;
+		font-size: 14px;
+		line-height: 20px;
+
+		&:hover {
+			background-color: rgba($color: #44546f, $alpha: 0.25);
+			cursor: pointer;
+		}
+	}
+}

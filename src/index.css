@@ -1,7 +1,11 @@
 :root {
+	--dynamic-button-hovered: #a6c5e229;
 }
 body {
 	margin: 0;
+	height: 100vh;
+	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Noto Sans,
+		Ubuntu, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 .d-flex {

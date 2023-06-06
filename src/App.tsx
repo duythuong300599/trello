@@ -1,3 +1,4 @@
+import BoardContent from "components/organisms/board"
 import Header from "components/organisms/header"
 
 function App() {
@@ -5,6 +6,7 @@ function App() {
   return (
     <>
       <Header />
+      <BoardContent />
     </>
   )
 }

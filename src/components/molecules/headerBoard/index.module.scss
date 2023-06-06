@@ -1,0 +1,42 @@
+.headerBoard {
+	height: 56px;
+	background-color: #0000003d;
+	backdrop-filter: blur(4px);
+	display: flex;
+	align-items: center;
+	padding: 0 20px;
+	color: #fff;
+
+	.boardName {
+		display: flex;
+		align-items: center;
+		.inputBoardName,
+		.title {
+			font-size: 18px;
+			padding: 0 10px;
+			font-weight: bold;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.title {
+			line-height: 32px;
+			border-radius: 6px;
+
+			&:hover {
+				background-color: var(--dynamic-button-hovered);
+			}
+		}
+
+		.iconEdit {
+			cursor: pointer;
+			padding: 8px;
+			border-radius: 6px;
+
+			&:hover {
+				background-color: var(--dynamic-button-hovered);
+			}
+		}
+	}
+}

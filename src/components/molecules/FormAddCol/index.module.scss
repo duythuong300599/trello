@@ -1,0 +1,22 @@
+.form {
+	padding: 8px;
+
+	:global {
+		.ant-form-item {
+			margin: 0;
+		}
+	}
+	.btn {
+		width: 100%;
+		display: flex;
+		margin-top: 12px;
+		align-items: center;
+
+		.iconClose {
+			width: 24px;
+			height: 24px;
+			margin-left: 4px;
+			transform: rotate(45deg);
+		}
+	}
+}

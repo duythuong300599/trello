@@ -24,7 +24,7 @@ module.exports = {
 
     'no-console': 1,
     'no-lonely-if': 1,
-    'no-unused-vars': 1,
+    'no-unused-vars': [1, 'error'],
     'no-trailing-spaces': 1,
     'no-multi-spaces': 1,
     'no-multiple-empty-lines': 1,

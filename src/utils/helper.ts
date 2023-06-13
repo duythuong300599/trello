@@ -1,7 +1,5 @@
-// a little function to help us with reordering the result
-export const reOrder = (listSource: any[], listDestination:any[], startIndex: number, endIndex: number) => {
-  // const resultSource = Array.from(listSource);
-  // const resultDestination = Array.from(listDestination);
-  const [removed] = listSource.splice(startIndex, 1);
-  listDestination.splice(endIndex, 0, removed);
-};
+export const mapOrder = (arraySort: any[], order:any, key:string) => {
+  if(!arraySort || !order || !key) return [];
+  arraySort?.sort((a:any,b:any) => order.indexOf(a[key]) - order.indexOf(b[key]))
+  return arraySort;
+}

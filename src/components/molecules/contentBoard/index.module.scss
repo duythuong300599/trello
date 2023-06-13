@@ -1,9 +1,45 @@
 .boardContent {
 	margin-top: 12px;
 	padding-left: 12px;
-	display: flex;
+	display: inline-flex;
 
 	.col {
 		margin: 0 4px;
+	}
+
+	.addCol {
+		margin-top: 12px;
+		margin-left: 12px;
+		padding: 0 8px;
+		width: 272px;
+		height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba($color: #fff, $alpha: 0.25);
+		border-radius: 12px;
+		cursor: pointer;
+		transition: height 0.1s ease;
+
+		&:hover {
+			background-color: rgba($color: #fff, $alpha: 0.2);
+		}
+
+		span {
+			font-size: 14px;
+			line-height: 20px;
+			color: #fff;
+			margin-left: 4px;
+		}
+
+		&.addActive {
+			height: 96px;
+			background-color: #fff;
+			flex-direction: column;
+		}
+
+		.formAddCol {
+			width: 100%;
+		}
 	}
 }

@@ -1,6 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react'
-
-import { DragDropContext, Draggable } from 'react-beautiful-dnd';
+import { useCallback, useRef, useState } from 'react'
 
 import styles from './index.module.scss'
 import Card from '../card'
@@ -10,21 +8,24 @@ import Svg from 'components/atoms/Svg';
 import { Form } from 'antd';
 import { TextArea } from 'components/atoms/Input';
 import Button from 'components/atoms/Button';
+import TitleEditInline from '../TitleEditInline';
+import { mapOrder } from 'utils/helper';
 
 interface Props {
   data: any;
   onAddCard?: (colId: string, cardTitle: string) => void;
-  columnId?: string;
+  onDeleteColumn?: (id: string) => void;
+  columnId: string;
+  provided?: any
 }
 
 function Column(props: Props) {
-  const { data, columnId, onAddCard } = props;
+  const { data, columnId, onAddCard, provided } = props;
   const [form] = Form.useForm()
   const [addCard, setAddCard] = useState(false);
 
   const textRef = useRef<any>()
-
-  const [array, setArray] = useState(data.cards);
+  const dataCardSorted = mapOrder(data?.cards, data?.cardOrder, '_id');
 
   const handleAddCard = useCallback(
     (data: any) => {
@@ -43,10 +44,15 @@ function Column(props: Props) {
     [onAddCard]
   )
 
-
   return (
     <div className={styles.colWrapper}>
-      <div className={styles.colHeader}>{data.title}</div>
+      <div className={styles.colHeader} {...provided.dragHandleProps}>
+        <TitleEditInline
+          id={columnId}
+          title={data.title}
+          onDeleteColumn={props?.onDeleteColumn}
+        />
+      </div>
       <div className={styles.colBody}>
         <StrictModeDroppable droppableId={data._id} type='CARD' >
           {(provided, snapshot) => {
@@ -55,21 +61,8 @@ function Column(props: Props) {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {array.map((value: any, index: number) => (
-                  <Draggable key={value._id} draggableId={value._id} index={index}>
-                    {(_provided, _snapshot) => {
-                      return (
-                        <div
-                          className={styles.card}
-                          {..._provided.dragHandleProps}
-                          ref={_provided.innerRef}
-                          {..._provided.draggableProps}
-                        >
-                          <Card title={value.title} />
-                        </div>
-                      )
-                    }}
-                  </Draggable>
+                {dataCardSorted.map((value: any, index: number) => (
+                  <Card card={value} key={index} index={index} />
                 ))}
                 {provided.placeholder}
               </div>

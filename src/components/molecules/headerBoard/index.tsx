@@ -4,15 +4,36 @@ import Input from 'components/atoms/Input';
 import Svg from 'components/atoms/Svg';
 import Edit from 'assets/images/pen.svg';
 import { InputRef } from 'antd';
+import { updateBoard } from 'api/boards';
 
-function HeaderBoard() {
+interface Props {
+  id?: string;
+  title?: string;
+}
+
+function HeaderBoard(props: Props) {
+  const { id, title } = props;
   const [editBoardName, setEditBoardName] = useState<boolean>(false);
-  const [valueInput, setValueInput] = useState('124234');
+  const [valueInput, setValueInput] = useState('');
   const inputRef = useRef<InputRef>(null);
 
   const onValueInputChange = (e: any) => {
     setValueInput(e.target.value)
   }
+
+  const handleBlur = async () => {
+    try {
+      setEditBoardName(false)
+      const value = await updateBoard(id, { title: valueInput })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    if (title) setValueInput(title)
+  }, [title])
+
 
   useEffect(() => {
     if (inputRef?.current) {
@@ -33,7 +54,7 @@ function HeaderBoard() {
               maxLength={20}
               className={styles.inputBoardName}
               onChange={onValueInputChange}
-              onBlur={() => setEditBoardName(false)}
+              onBlur={handleBlur}
             />
           </React.Fragment>
           :

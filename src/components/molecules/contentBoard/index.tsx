@@ -12,14 +12,20 @@ import { addNewCard, addNewColumn, deleteColumn, updateColumn } from 'api/boards
 import iconPlusWhite from 'assets/images/plusWhite.svg';
 import Svg from 'components/atoms/Svg'
 import FormAddCol from '../FormAddCol'
-import { mapOrder } from 'utils/helper'
 
-function ContentBoard() {
+interface Props {
+  dataBoards: any;
+  isFetching?: boolean;
+  isLoading?: boolean;
+  refetch?: () => void;
+}
+
+function ContentBoard(props: Props) {
+
+  const { dataBoards, isFetching, isLoading, refetch } = props;
 
   const [data, setData] = useState<any>();
   const [addCol, setAddCol] = useState(false);
-
-  const { data: dataBoards, isLoading, isFetching, refetch } = useBoards('646605b9f7e904b1dfa8ba0e')
 
   const handleDragEnd = async (results: any) => {
     const { source, destination, type } = results;
@@ -66,7 +72,7 @@ function ContentBoard() {
         }
         const res = await addNewCard(payload);
         if (res) {
-          refetch();
+          refetch?.();
           column.cards.push(res);
           setData({ ...data, columns });
         }

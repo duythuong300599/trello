@@ -1,63 +1,60 @@
-
-import styles from './index.module.scss'
-import { BackGround, IBackground } from 'utils/constants';
-import Svg from 'components/atoms/Svg';
-import skeleton from 'assets/images/skeletonBoard.svg'
-import check from 'assets/images/check.svg'
 import { Form } from 'antd';
-import { useEffect, useRef, useState } from 'react';
-import Input from 'components/atoms/Input';
-import Button from 'components/atoms/Button';
-import { addNewBoard } from 'api/boards';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ROUTES } from 'routes';
 
-interface Props {
-  open?: boolean
-}
+import { addNewBoard } from '@/api/boards';
+// eslint-disable-next-line import/extensions
+import iconCheck from '@/assets/images/check.svg';
+// eslint-disable-next-line import/extensions
+import skeleton from '@/assets/images/skeletonBoard.svg';
+import Button from '@/components/atoms/Button';
+import Input from '@/components/atoms/Input';
+import Svg from '@/components/atoms/Svg';
+import { ROUTES } from '@/routes';
+import { BackGround, IBackground } from '@/utils/constants';
 
-function ModalAddBoard(props: Props) {
+import styles from './index.module.scss';
 
-  type backgroundType = IBackground['value']
+function ModalAddBoard() {
+  type backgroundType = IBackground['value'];
 
-  const [bgSelected, setBgSelected] = useState<backgroundType>('backGround1')
+  const [bgSelected, setBgSelected] = useState<backgroundType>('backGround1');
   const [disableButton, setDisableButton] = useState(true);
   const inputRef = useRef<HTMLInputElement>();
 
-  const [form] = Form.useForm()
-  const navigate = useNavigate()
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
 
-  const listBackground = Object.keys(BackGround)
+  const listBackground = Object.keys(BackGround);
 
   const handleValuesChange = (value: any) => {
     if (value.title.length >= 3) {
-      setDisableButton(false)
+      setDisableButton(false);
     } else {
-      setDisableButton(true)
+      setDisableButton(true);
     }
-  }
+  };
 
   const handleFinish = async (value: any) => {
     try {
-      const data = await form.validateFields(value)
+      const data = await form.validateFields(value);
       const formData = {
         title: data.title,
-        backGround: bgSelected
-      }
+        backGround: bgSelected,
+      };
 
-      const res = await addNewBoard(formData)
+      const res = await addNewBoard(formData);
       if (res) {
-        navigate(ROUTES.BoardDetail(res._id))
+        navigate(ROUTES.BoardDetail(res._id));
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
-    if (inputRef.current) inputRef.current.focus()
-  }, [inputRef])
-
+    if (inputRef.current) inputRef.current.focus();
+  }, [inputRef]);
 
   return (
     <div className={styles.modalAddBoard}>
@@ -66,11 +63,11 @@ function ModalAddBoard(props: Props) {
         <div
           className={styles.item}
           style={{
-            background: BackGround[bgSelected]
+            background: BackGround[bgSelected],
           }}
         >
           <div className={styles.skeleton}>
-            <Svg src={skeleton} alt='skeleton' />
+            <Svg src={skeleton} alt="skeleton" />
           </div>
         </div>
       </div>
@@ -80,38 +77,42 @@ function ModalAddBoard(props: Props) {
           {listBackground.map((bg: any, i: number) => {
             const data: backgroundType = bg;
             return (
-              <li key={i} >
+              <li key={i}>
                 <button
                   className={styles.item}
                   onClick={() => setBgSelected(bg)}
                   style={{
-                    background: BackGround[data]
+                    background: BackGround[data],
                   }}
                 >
-                  {bgSelected === bg &&
+                  {bgSelected === bg && (
                     <span className={styles.selected}>
-                      <Svg src={check} alt='check' />
+                      <Svg src={iconCheck} alt="check" />
                     </span>
-                  }
+                  )}
                 </button>
               </li>
-            )
+            );
           })}
         </ul>
       </div>
       <Form
         form={form}
-        layout='vertical'
+        layout="vertical"
         onValuesChange={handleValuesChange}
         onFinish={handleFinish}
       >
         <Form.Item
           className={styles.title}
-          name='title'
-          label='Board title'
+          name="title"
+          label="Board title"
           rules={[
             { required: true, message: 'Board title is required' },
-            { min: 3, max: 20, message: 'Board title must be range 3 to 20 character' }
+            {
+              min: 3,
+              max: 20,
+              message: 'Board title must be range 3 to 20 character',
+            },
           ]}
         >
           <Input ref={inputRef} minLength={3} maxLength={20} />
@@ -120,8 +121,8 @@ function ModalAddBoard(props: Props) {
         <Form.Item>
           <Button
             className={styles.button}
-            type='primary'
-            htmlType='submit'
+            type="primary"
+            htmlType="submit"
             disabled={disableButton}
           >
             Create
@@ -129,7 +130,7 @@ function ModalAddBoard(props: Props) {
         </Form.Item>
       </Form>
     </div>
-  )
+  );
 }
 
-export default ModalAddBoard
+export default ModalAddBoard;

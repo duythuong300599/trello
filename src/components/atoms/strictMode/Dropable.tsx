@@ -18,9 +18,7 @@ const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
   }
   return (
     // eslint-disable-next-line react/react-in-jsx-scope
-    <Droppable {...props}>
-      {children}
-    </Droppable>
+    <Droppable {...props}>{children}</Droppable>
   );
 };
 

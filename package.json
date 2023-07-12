@@ -2,15 +2,19 @@
 	"name": "trello",
 	"private": true,
 	"version": "0.0.0",
-	"type": "module",
 	"scripts": {
 		"dev": "vite --host 0.0.0.0 --port 3000",
 		"build": "tsc && vite build",
-		"lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-		"preview": "vite preview"
+		"tslint": "tsc -p tsconfig.json --noEmit",
+		"lint": "eslint \"src/**/*.ts*\"",
+		"lint-fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
+		"pretty": "prettier --write \"src/**/*.{ts,tsx,json,html,css}\"",
+		"preview": "vite preview",
+		"prepare": "husky install"
 	},
 	"dependencies": {
 		"@react-spring/web": "^9.7.2",
+		"@tanstack/react-query": "^4.29.12",
 		"antd": "^5.5.0",
 		"axios": "^1.4.0",
 		"js-cookie": "^3.0.5",
@@ -19,10 +23,12 @@
 		"react-dom": "^18.2.0",
 		"react-router-dom": "^6.12.1",
 		"sass": "^1.62.1",
+		"classnames": "^2.3.2",
 		"vite-tsconfig-paths": "^4.2.0"
 	},
 	"devDependencies": {
-		"@tanstack/react-query": "^4.29.12",
+		"@commitlint/cli": "^17.6.6",
+		"@commitlint/config-conventional": "^17.6.6",
 		"@types/js-cookie": "^3.0.3",
 		"@types/react": "^18.0.28",
 		"@types/react-beautiful-dnd": "^13.1.4",
@@ -30,10 +36,19 @@
 		"@typescript-eslint/eslint-plugin": "^5.57.1",
 		"@typescript-eslint/parser": "^5.57.1",
 		"@vitejs/plugin-react": "^4.0.0",
-		"classnames": "^2.3.2",
 		"eslint": "^8.38.0",
+		"eslint-config-airbnb": "^19.0.4",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-jsx-a11y": "^6.6.1",
+		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-react": "^7.30.1",
 		"eslint-plugin-react-hooks": "^4.6.0",
-		"eslint-plugin-react-refresh": "^0.3.4",
+		"eslint-plugin-simple-import-sort": "^10.0.0",
+		"husky": "^8.0.3",
+		"lint-staged": "^13.2.3",
+		"prettier": "^3.0.0",
 		"typescript": "^5.0.2",
 		"vite": "^4.3.2"
 	}

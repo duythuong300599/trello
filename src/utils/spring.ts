@@ -1,4 +1,5 @@
-export const FADED = { // faded
+export const FADED = {
+  // faded
   from: {
     opacity: 0,
   },

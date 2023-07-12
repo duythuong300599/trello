@@ -1,12 +1,13 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom'
-import routes from 'routes'
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+
+import routes from '@/routes';
 
 function Wrapper() {
   return (
     <Routes>
       {routes.map((route, index) => {
-        const Layout = route.layout ?? React.Fragment
+        const Layout = route.layout ?? React.Fragment;
         return (
           <Route
             key={index}
@@ -19,11 +20,10 @@ function Wrapper() {
               </React.Fragment>
             }
           />
-        )
-      })
-      }
+        );
+      })}
     </Routes>
-  )
+  );
 }
 
-export default Wrapper
+export default Wrapper;

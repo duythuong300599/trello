@@ -1,12 +1,13 @@
-import Button from "components/atoms/Button"
-import Input from "components/atoms/Input"
-import Svg from "components/atoms/Svg"
-import { Form } from "antd";
+import { Form } from 'antd';
+import React, { useRef } from 'react';
 
-import styles from './index.module.scss'
+// eslint-disable-next-line import/extensions
+import iconPlus from '@/assets/images/plus.svg';
+import Button from '@/components/atoms/Button';
+import Input from '@/components/atoms/Input';
+import Svg from '@/components/atoms/Svg';
 
-import iconPlus from 'assets/images/plus.svg';
-import { useRef } from "react";
+import styles from './index.module.scss';
 
 interface Props {
   onClose?: () => void;
@@ -17,51 +18,42 @@ function FormAddCol(props: Props) {
   const { onClose, onAddNewColumn } = props;
   const [form] = Form.useForm();
 
-  const inputRef = useRef<any>()
+  const inputRef = useRef<any>();
 
   const handleFinish = (value: any) => {
     if (!value.titleCol && inputRef.current) {
       inputRef.current.focus();
-      return
+      return;
     }
 
     onAddNewColumn?.(value.titleCol);
     form.resetFields();
     onClose?.();
-  }
+  };
 
   return (
-    <Form
-      form={form}
-      onFinish={handleFinish}
-      className={styles.form}
-    >
-      <Form.Item name='titleCol'>
+    <Form form={form} onFinish={handleFinish} className={styles.form}>
+      <Form.Item name="titleCol">
         <Input
           ref={inputRef}
           width={'100%'}
           autoFocus
-          placeholder='Nhập tiêu đề danh sách'
+          placeholder="Nhập tiêu đề danh sách"
         />
       </Form.Item>
-      <div
-        className={styles.btn}
-      >
-        <Button
-          type='primary'
-          htmlType="submit"
-        >
+      <div className={styles.btn}>
+        <Button type="primary" htmlType="submit">
           Thêm danh sách
         </Button>
         <Svg
           onClick={onClose}
           className={styles.iconClose}
           src={iconPlus}
-          alt='iconClose'
+          alt="iconClose"
         />
       </div>
     </Form>
-  )
+  );
 }
 
-export default FormAddCol
+export default FormAddCol;

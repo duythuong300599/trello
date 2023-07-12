@@ -1,9 +1,11 @@
-import Header from 'components/organisms/header'
-import styles from './index.module.scss'
-import { useSpring, animated } from '@react-spring/web';
-import spring from 'utils/spring';
-import { useEffect } from 'react';
+import { animated, useSpring } from '@react-spring/web';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+
+import Header from '@/components/organisms/header';
+import spring from '@/utils/spring';
+
+import styles from './index.module.scss';
 
 interface Props {
   children?: React.ReactNode | React.ReactNode[];
@@ -25,10 +27,12 @@ function Auth(props: Props) {
     <div className={styles.pageWrapper}>
       <div className={styles.mainWrapper}>
         <Header />
-        <animated.div style={springStyles} className={styles.mainContent}>{children}</animated.div>
+        <animated.div style={springStyles} className={styles.mainContent}>
+          {children}
+        </animated.div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Auth
+export default Auth;

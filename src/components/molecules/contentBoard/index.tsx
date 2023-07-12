@@ -1,17 +1,23 @@
-import { useEffect, useState } from 'react'
-
-import styles from './index.module.scss'
-import Column from '../column'
-import { DragDropContext, Draggable } from 'react-beautiful-dnd'
-import StrictModeDroppable from 'components/atoms/strictMode/Dropable'
-import { useBoards } from 'hooks/useBoards'
-import { Spin } from 'antd'
+import { Spin } from 'antd';
 import classNames from 'classnames';
-import { addNewCard, addNewColumn, deleteColumn, updateColumn } from 'api/boards'
+import React, { useEffect, useState } from 'react';
+import { DragDropContext, Draggable } from 'react-beautiful-dnd';
 
-import iconPlusWhite from 'assets/images/plusWhite.svg';
-import Svg from 'components/atoms/Svg'
-import FormAddCol from '../FormAddCol'
+import {
+  addNewCard,
+  addNewColumn,
+  deleteColumn,
+  updateCard,
+  updateColumn,
+} from '@/api/boards';
+// eslint-disable-next-line import/extensions
+import iconPlusWhite from '@/assets/images/plusWhite.svg';
+import StrictModeDroppable from '@/components/atoms/strictMode/Dropable';
+import Svg from '@/components/atoms/Svg';
+
+import Column from '../column';
+import FormAddCol from '../FormAddCol';
+import styles from './index.module.scss';
 
 interface Props {
   dataBoards: any;
@@ -21,8 +27,7 @@ interface Props {
 }
 
 function ContentBoard(props: Props) {
-
-  const { dataBoards, isFetching, isLoading, refetch } = props;
+  const { dataBoards, isFetching, isLoading } = props;
 
   const [data, setData] = useState<any>();
   const [addCol, setAddCol] = useState(false);
@@ -33,7 +38,10 @@ function ContentBoard(props: Props) {
       return;
     }
 
-    if (source.droppableId === destination.droppableId && source.index === destination.index) {
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
       return;
     }
 
@@ -46,18 +54,36 @@ function ContentBoard(props: Props) {
 
     if (type === 'CARD') {
       const columns: any = [...data.columns];
-      const sourceColumn = columns.find((column: any) => column._id === source.droppableId);
-      const destinationColumn = columns.find((column: any) => column._id === destination.droppableId);
-      const [movedCard] = sourceColumn!.cards.splice(source.index, 1);
-      const [movedCardId] = sourceColumn!.cardOrder.splice(source.index, 1);
+      const sourceColumn = columns.find(
+        (column: any) => column._id === source.droppableId,
+      );
+      const destinationColumn = columns.find(
+        (column: any) => column._id === destination.droppableId,
+      );
+      // console.log(sourceColumn, destinationColumn);
+      if (!sourceColumn || destinationColumn) return;
+      const [movedCard] = sourceColumn.cards.splice(source.index, 1);
+      const [movedCardId] = sourceColumn.cardOrder.splice(source.index, 1);
 
       destinationColumn?.cardOrder.splice(destination.index, 0, movedCardId);
       destinationColumn?.cards.splice(destination.index, 0, movedCard);
-      console.log(columns);
-      await updateColumn(destinationColumn._id, { cardOrder: destinationColumn.cardOrder })
+      if (sourceColumn._id !== destinationColumn._id) {
+        // console.log(sourceColumn.cardOrder, destinationColumn.cardOrder);
+        await updateColumn(sourceColumn._id, {
+          cardOrder: sourceColumn.cardOrder,
+        });
+        await updateColumn(destinationColumn._id, {
+          cardOrder: destinationColumn.cardOrder,
+        });
+        await updateCard(movedCardId, { columnId: destinationColumn._id });
+      } else {
+        await updateColumn(destinationColumn._id, {
+          cardOrder: destinationColumn.cardOrder,
+        });
+      }
       setData({ ...data, columns });
     }
-  }
+  };
 
   const onAddCard = async (colId: string, cardTitle: string) => {
     try {
@@ -69,18 +95,19 @@ function ContentBoard(props: Props) {
           boardId: data._id,
           columnId: colId,
           title: cardTitle,
-        }
+        };
         const res = await addNewCard(payload);
         if (res) {
-          refetch?.();
+          // refetch?.();
+          column.cardOrder.push(res._id);
           column.cards.push(res);
           setData({ ...data, columns });
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
-  }
+  };
 
   const handleAddNewColumn = async (columnTitle: string) => {
     try {
@@ -88,16 +115,16 @@ function ContentBoard(props: Props) {
       const newColumn = {
         boardId: data._id,
         title: columnTitle,
-      }
+      };
       const res = await addNewColumn(newColumn);
       if (res) {
         columns.push(res);
         setData({ ...data, columns });
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
-  }
+  };
 
   const handleDeleteCol = async (id: string) => {
     try {
@@ -110,89 +137,87 @@ function ContentBoard(props: Props) {
         setData({ ...data, columns });
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
-  }
+  };
 
   const handleAddCol = () => {
     setAddCol(true);
-  }
+  };
 
   const handleCloseAddCol = () => {
     setAddCol(false);
-  }
+  };
 
   useEffect(() => {
-    if (dataBoards) setData(dataBoards)
+    if (dataBoards) setData(dataBoards);
   }, [dataBoards]);
 
   return (
     <Spin spinning={isLoading || isFetching}>
       <div className={styles.boardContent}>
-        <DragDropContext onDragEnd={handleDragEnd} >
-          <StrictModeDroppable droppableId='droppableCol' type='COLUMN' direction='horizontal'>
-            {(provided, snapshot) => {
-              return (
-                <div
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  className={styles.boardContent}
-                >
-                  {data?.columns.map((column: any, index: number) => {
-                    return (
-                      <Draggable key={column._id} draggableId={column._id} index={index}>
-                        {(_provided, _snapshot) => {
-                          return (
-                            <div
-                              className={styles.col}
-                              // {..._provided.dragHandleProps}
-                              ref={_provided.innerRef}
-                              {..._provided.draggableProps}
-                            >
-                              <Column
-                                provided={_provided}
-                                columnId={column._id}
-                                onAddCard={onAddCard}
-                                data={column}
-                                onDeleteColumn={handleDeleteCol}
-                              />
-                            </div>
-                          )
-                        }}
-                      </Draggable>
-                    )
-                  })}
-                  {provided.placeholder}
-                </div>
-              )
-            }}
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <StrictModeDroppable
+            droppableId="droppableCol"
+            type="COLUMN"
+            direction="horizontal"
+          >
+            {(provided) => (
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                className={styles.boardContent}
+              >
+                {data?.columns.map((column: any, index: number) => (
+                  <Draggable
+                    key={column._id}
+                    draggableId={column._id}
+                    index={index}
+                  >
+                    {(_provided) => (
+                      <div
+                        className={styles.col}
+                        // {..._provided.dragHandleProps}
+                        ref={_provided.innerRef}
+                        {..._provided.draggableProps}
+                      >
+                        <Column
+                          provided={_provided}
+                          columnId={column._id}
+                          onAddCard={onAddCard}
+                          data={column}
+                          onDeleteColumn={handleDeleteCol}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
           </StrictModeDroppable>
         </DragDropContext>
         <div
           className={classNames(styles.addCol, addCol ? styles.addActive : '')}
+          onClick={handleAddCol}
         >
-          {!addCol ?
-            <div onClick={handleAddCol}>
-              <Svg
-                src={iconPlusWhite}
-                height={16}
-                width={16}
-                alt='icon'
-              />
+          {!addCol ? (
+            <div>
+              <Svg src={iconPlusWhite} height={16} width={16} alt="icon" />
               <span>Thêm danh sách</span>
             </div>
-            :
+          ) : (
             <div className={styles.formAddCol}>
               <FormAddCol
                 onAddNewColumn={handleAddNewColumn}
                 onClose={handleCloseAddCol}
               />
             </div>
-          }
+          )}
         </div>
       </div>
     </Spin>
-  )
+  );
 }
 
-export default ContentBoard
+export default ContentBoard;
